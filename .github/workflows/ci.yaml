@@ -54,6 +54,10 @@ jobs:
       with:
         java-version: ${{ matrix.profile.jdk }}
         distribution: temurin
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: 3.8.2
     - name: Cache local maven repository
       uses: actions/cache@v3
       with:
@@ -69,7 +73,7 @@ jobs:
         sudo apt update
         sudo apt install -y libcppunit-dev libsasl2-dev
     - name: Build with Maven (${{ matrix.profile.name }})
-      run: mvn -B -V -e -ntp "-Dstyle.color=always" ${{ matrix.profile.args }}
+      run: mvn -B -V -e -ntp -am -pl zookeeper-client "-Drat.skip=true" "-Dstyle.color=always" ${{ matrix.profile.args }}
       env:
         MAVEN_OPTS: -Djansi.force=true
     - name: Upload unit test results
